@@ -11,13 +11,25 @@ class CalculationsController < ApplicationController
     # ================================================================================
 
 
-    @word_count = "Replace this string with your answer."
+    @word_count = @text.split.length
 
-    @character_count_with_spaces = "Replace this string with your answer."
+    @character_count_with_spaces = @text.length
 
-    @character_count_without_spaces = "Replace this string with your answer."
+    text_without_spaces = @text.gsub(" ","")
+    text_without_linefeed = text_without_spaces.gsub("\n","")
+    text_without_cr = text_without_linefeed.gsub("\r","")
+    text_without_tabs = text_without_cr.gsub("\t","")
 
-    @occurrences = "Replace this string with your answer."
+    # or
+    # text_without_spaces = @text.gsub(" ","").gsub("\n","").gsub("\r","").gsub("\t","")
+
+    @character_count_without_spaces = text_without_tabs.length
+
+    lower_case_special = @special_word.downcase
+    sentence_array = @text.gsub(/[^a-z0-9\s]/i, "")
+    lower_case_sentence = sentence_array.downcase
+    no_character_array = lower_case_sentence.split
+    @occurrences = no_character_array.count(lower_case_special)
 
     # ================================================================================
     # Your code goes above.
@@ -37,8 +49,11 @@ class CalculationsController < ApplicationController
     # The number of years the user input is in the integer @years.
     # The principal value the user input is in the decimal @principal.
     # ================================================================================
+    mo_int = @apr/1200
+    months = @years*12
+    principal = @principal
 
-    @monthly_payment = "Replace this string with your answer."
+    @monthly_payment = principal*((mo_int*(1+mo_int)**months)/((1+mo_int)**months-1))
 
     # ================================================================================
     # Your code goes above.
@@ -60,12 +75,20 @@ class CalculationsController < ApplicationController
     #   number of seconds as a result.
     # ================================================================================
 
-    @seconds = "Replace this string with your answer."
-    @minutes = "Replace this string with your answer."
-    @hours = "Replace this string with your answer."
-    @days = "Replace this string with your answer."
-    @weeks = "Replace this string with your answer."
-    @years = "Replace this string with your answer."
+    last = @ending
+    first = @starting
+    minutes = (last-first)/60
+    hours = minutes/60
+    days = hours/24
+    weeks = days/7
+    years = days/365
+
+    @seconds = last-first
+    @minutes = minutes
+    @hours = hours
+    @days = days
+    @weeks = weeks
+    @years = years
 
     # ================================================================================
     # Your code goes above.
@@ -82,27 +105,58 @@ class CalculationsController < ApplicationController
     # The numbers the user input are in the array @numbers.
     # ================================================================================
 
-    @sorted_numbers = "Replace this string with your answer."
+    min_num = @numbers.min
+    max_num = @numbers.max
+    sum_num = @numbers.sum
+    count_num = @numbers.count
+    sorted_num = @numbers.sort
+    mean_num = sum_num/count_num
+    var_num = [ ]
+    entered_numbers = [ ]
+    freq = [ ]
 
-    @count = "Replace this string with your answer."
+    @numbers.each do |element|
+      ar = (element-mean_num)**2
+      var_num.push(ar)
+    end
 
-    @minimum = "Replace this string with your answer."
+    variance = (var_num.sum)/count_num
 
-    @maximum = "Replace this string with your answer."
+    # @numbers.each do |element|
+    #   num_count = @numbers.count(elephant)
+    # end
 
-    @range = "Replace this string with your answer."
 
-    @median = "Replace this string with your answer."
+    @numbers.each do |elephant|
+      number = elephant
+      count = @numbers.count(elephant)
+      entered_numbers.push(number)
+      freq.push(count)
+    end
 
-    @sum = "Replace this string with your answer."
+    mode = entered_numbers[freq.index(freq.max)]
 
-    @mean = "Replace this string with your answer."
+    @sorted_numbers = @numbers.sort
 
-    @variance = "Replace this string with your answer."
+    @count = @numbers.count
 
-    @standard_deviation = "Replace this string with your answer."
+    @minimum = min_num
 
-    @mode = "Replace this string with your answer."
+    @maximum = max_num
+
+    @range = max_num-min_num
+
+    @median = (sorted_num[(count_num-1)/2]+sorted_num[(count_num/2)])/2
+
+    @sum = sum_num
+
+    @mean = sum_num/count_num
+
+    @variance = variance
+
+    @standard_deviation = Math.sqrt(variance)
+
+    @mode = mode
 
     # ================================================================================
     # Your code goes above.
